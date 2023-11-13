@@ -19,7 +19,7 @@ class _TranslatorState extends State<Translator> {
     "Russian",
     "Spanish",
     "Urdu",
-    "lapanese",
+    "Latin",
     "Italian",
   ];
 
@@ -27,12 +27,13 @@ class _TranslatorState extends State<Translator> {
     "en",
     "bn",
     "hi",
+    "ar",
     "de",
     "ru",
     "es",
     "ur",
-    "ja",
-    "it",
+    "la",
+    "it"
   ];
   String from = "en";
   String to = "bn";
