@@ -15,18 +15,22 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var selectIndex = 0;
   List pages = [
-    Translator(),
-    FavoritePage(),
-    HistoryPage(),
-    Settings(),
+    const Translator(),
+    const FavoritePage(),
+    const HistoryPage(),
+    const Settings(),
   ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         title: const Text("Translator App"),
+        centerTitle: true,
+        backgroundColor: Colors.amber,
       ),
       bottomNavigationBar: ResponsiveNavigationBar(
+        
         borderRadius: 20,
         selectedIndex: selectIndex,
         onTabChange: (int index) {
@@ -38,6 +42,7 @@ class _HomePageState extends State<HomePage> {
           NavigationBarButton(
             text: 'Home',
             icon: Icons.home,
+            backgroundColor: Colors.white,
             backgroundGradient: LinearGradient(
               colors: [Colors.yellow, Colors.green, Colors.blue],
             ),
@@ -45,6 +50,7 @@ class _HomePageState extends State<HomePage> {
           NavigationBarButton(
             text: 'Favorite',
             icon: Icons.favorite,
+            backgroundColor: Colors.white,
             backgroundGradient: LinearGradient(
               colors: [Colors.cyan, Colors.teal],
             ),
@@ -52,6 +58,7 @@ class _HomePageState extends State<HomePage> {
           NavigationBarButton(
             text: 'History',
             icon: Icons.history,
+            backgroundColor: Colors.white,
             backgroundGradient: LinearGradient(
               colors: [Colors.green, Colors.yellow],
             ),
@@ -59,6 +66,7 @@ class _HomePageState extends State<HomePage> {
           NavigationBarButton(
             text: 'Settings',
             icon: Icons.settings,
+            backgroundColor: Colors.white,
             backgroundGradient: LinearGradient(
               colors: [Colors.green, Colors.yellow],
             ),

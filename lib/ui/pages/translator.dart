@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:language_translator/ui/custom/custom_widget.dart';
 import 'package:translator/translator.dart';
 
 class Translator extends StatefulWidget {
@@ -58,15 +60,7 @@ class _TranslatorState extends State<Translator> {
         });
       });
     } catch (e) {
-      return Fluttertoast.showToast(
-              msg: e.toString(),
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0)
-          .then((value) {
+      return ReusableMethod().myToast(e.toString()).then((value) {
         setState(() {
           isLoaded = false;
         });
@@ -77,16 +71,7 @@ class _TranslatorState extends State<Translator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 114, 114, 114),
-      appBar: AppBar(
-        title: const Text(
-          "Translator App",
-          style: TextStyle(color: Colors.white),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.black.withAlpha(98),
-        elevation: 10,
-      ),
+      backgroundColor: Colors.grey,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -96,7 +81,8 @@ class _TranslatorState extends State<Translator> {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
-                  color: Colors.black.withAlpha(88), borderRadius: BorderRadius.circular(8)),
+                  color: Colors.black.withAlpha(88),
+                  borderRadius: BorderRadius.circular(8)),
               child: Column(
                 children: [
                   Row(
@@ -196,9 +182,11 @@ class _TranslatorState extends State<Translator> {
                     ],
                   ),
                   Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(10)),
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10))),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: Form(
@@ -261,17 +249,58 @@ class _TranslatorState extends State<Translator> {
               height: 250,
               width: double.infinity,
               margin: const EdgeInsets.all(10),
-              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(10)),
-              child: SingleChildScrollView(
-                  child: Text(
-                result,
-                style: const TextStyle(
-                    fontSize: 30,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500),
-              )),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10))),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          CustomTextButton(
+                              text: "Add Favorite", onPressed: () {}),
+                          CustomTextButton(
+                              text: "Add History", onPressed: () {}),
+                          CustomTextButton(
+                              text: "Copy All",
+                              onPressed: () {
+                                Clipboard.setData(ClipboardData(text: result))
+                                    .then((value) {
+                                  ReusableMethod().myToast("Copyed");
+                                });
+                              })
+                        ]),
+                  ),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10))),
+                      child: SingleChildScrollView(
+                        child: Text(
+                          result,
+                          style: const TextStyle(
+                              fontSize: 22,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500),
+                          softWrap: true,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             )
           ],
         ),
