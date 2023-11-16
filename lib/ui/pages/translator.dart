@@ -79,7 +79,10 @@ class _TranslatorState extends State<Translator> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 114, 114, 114),
       appBar: AppBar(
-        title: const Text("Translator App",style: TextStyle(color: Colors.white),),
+        title: const Text(
+          "Translator App",
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: true,
         backgroundColor: Colors.black.withAlpha(98),
         elevation: 10,
@@ -88,26 +91,25 @@ class _TranslatorState extends State<Translator> {
         child: Column(
           children: [
             const SizedBox(
-              height: 30,
+              height: 10,
             ),
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
+              margin: const EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(20)),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  color: Colors.black.withAlpha(88), borderRadius: BorderRadius.circular(8)),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      const Text(
-                        "From",
-                        style: TextStyle(
-                            fontSize: 25,
-                            color: Colors.blueAccent,
-                            fontWeight: FontWeight.bold),
-                      ),
                       DropdownButton(
+                          iconEnabledColor: Colors.white,
+                          dropdownColor: Colors.grey,
+                          iconSize: 40,
+                          style: const TextStyle(
+                              fontSize: 25,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
                           value: fromSelectedLanguage,
                           items: languages.map((language) {
                             return DropdownMenuItem(
@@ -141,63 +143,22 @@ class _TranslatorState extends State<Translator> {
                           }).toList(),
                           onChanged: (value) {
                             fromSelectedLanguage = value!;
-                          })
-                    ]),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Container(
-                margin: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Form(
-                    key: _key,
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          controller: controller,
-                          decoration:
-                              const InputDecoration(border: InputBorder.none),
-                          validator: (value) {
-                            if (value!.isNotEmpty) {
-                              return null;
-                            } else {
-                              return null;
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                )),
-            const SizedBox(
-              height: 10,
-            ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.black)),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
+                          }),
                       const Text(
                         "To",
                         style: TextStyle(
                             fontSize: 25,
-                            color: Colors.blueAccent,
+                            color: Colors.red,
                             fontWeight: FontWeight.bold),
                       ),
                       DropdownButton(
+                          iconEnabledColor: Colors.white,
+                          dropdownColor: Colors.grey,
+                          iconSize: 40,
+                          style: const TextStyle(
+                              fontSize: 25,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
                           value: toSelectedLanguage,
                           items: languages.map((language) {
                             return DropdownMenuItem(
@@ -231,8 +192,37 @@ class _TranslatorState extends State<Translator> {
                           }).toList(),
                           onChanged: (value) {
                             toSelectedLanguage = value!;
-                          })
-                    ]),
+                          }),
+                    ],
+                  ),
+                  Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Form(
+                          key: _key,
+                          child: TextFormField(
+                            style: const TextStyle(
+                                fontSize: 25,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500),
+                            maxLines: 3,
+                            controller: controller,
+                            decoration:
+                                const InputDecoration(border: InputBorder.none),
+                            validator: (value) {
+                              if (value!.isNotEmpty) {
+                                return null;
+                              } else {
+                                return null;
+                              }
+                            },
+                          ),
+                        ),
+                      )),
+                ],
               ),
             ),
             const SizedBox(
@@ -270,11 +260,18 @@ class _TranslatorState extends State<Translator> {
             Container(
               height: 250,
               width: double.infinity,
-              margin: const EdgeInsets.all(20),
+              margin: const EdgeInsets.all(10),
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(10)),
-              child: SingleChildScrollView(child: Text(result)),
+              child: SingleChildScrollView(
+                  child: Text(
+                result,
+                style: const TextStyle(
+                    fontSize: 30,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500),
+              )),
             )
           ],
         ),
