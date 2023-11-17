@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:language_translator/ui/home_page.dart';
-import 'package:language_translator/ui/pages/translator.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:language_translator/ui/bottom_navigation.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,14 +12,20 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const HomePage(),
+    return ScreenUtilInit(
+      designSize: ScreenUtil.defaultSize,
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          home: const HomePage(),
+        );
+      },
     );
   }
 }

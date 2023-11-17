@@ -33,9 +33,13 @@ dependencies:
 
 
   cupertino_icons: ^1.0.2
+  flutter_screenutil: ^5.9.0
   translator: ^0.1.7
   fluttertoast: ^8.2.4
   responsive_navigation_bar: ^4.0.4
+  flutter_tts: ^3.8.3
+  speech_to_text: ^6.4.1
+  avatar_glow: ^2.0.2
 
 dev_dependencies:
   flutter_test:
