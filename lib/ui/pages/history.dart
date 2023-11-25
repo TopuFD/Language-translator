@@ -1,9 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
 
-// ignore: must_be_immutable
 class HistoryPage extends StatelessWidget {
   HistoryPage({
     super.key,
@@ -47,9 +45,8 @@ class HistoryPage extends StatelessWidget {
                       margin: EdgeInsets.symmetric(vertical: 6.h),
                       elevation: 3,
                       child: ListTile(
-                      
                         title: Padding(
-                          padding: EdgeInsets.only(bottom: 10),
+                          padding: const EdgeInsets.only(bottom: 10),
                           child: Text(
                               "${data.indexOf(data[index]) + 1}. ${data[index].title.toString()}"),
                         ),
@@ -58,7 +55,7 @@ class HistoryPage extends StatelessWidget {
                           onPressed: () {
                             history.deleteAt(data.indexOf(data[index]));
                           },
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.delete,
                             color: Colors.black,
                           ),
@@ -69,6 +66,5 @@ class HistoryPage extends StatelessWidget {
             }),
       ),
     );
-    ;
   }
 }

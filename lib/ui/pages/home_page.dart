@@ -12,7 +12,7 @@ class MyHomePage extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
       
-        backgroundColor: Color.fromARGB(225, 255, 255, 255),
+        backgroundColor: const Color.fromARGB(225, 255, 255, 255),
         body: Padding(
           padding: EdgeInsets.all(8.w),
           child: Column(

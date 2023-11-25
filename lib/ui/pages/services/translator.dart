@@ -119,7 +119,7 @@ class _TranslatorState extends State<Translator> {
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.arrow_back,
               color: Colors.white,
             ),
@@ -131,7 +131,7 @@ class _TranslatorState extends State<Translator> {
           backgroundColor: Colors.blue,
           centerTitle: true,
         ),
-        backgroundColor: Color.fromARGB(211, 201, 227, 248),
+        backgroundColor: const Color.fromARGB(211, 201, 227, 248),
         body: SingleChildScrollView(
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
@@ -333,7 +333,7 @@ class _TranslatorState extends State<Translator> {
                           borderRadius: BorderRadius.circular(10.r)),
                       child: isLoaded == true
                           ? const Center(
-                              child: const CircularProgressIndicator(
+                              child: CircularProgressIndicator(
                                 color: Colors.white,
                               ),
                             )

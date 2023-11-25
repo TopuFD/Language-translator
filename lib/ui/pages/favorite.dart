@@ -36,7 +36,7 @@ class FavoritePage extends StatelessWidget {
                       elevation: 3,
                       child: ListTile(
                         title: Padding(
-                          padding: EdgeInsets.only(bottom: 10),
+                          padding: EdgeInsets.only(bottom: 10.h),
                           child: Text(
                               "${data.indexOf(data[index]) + 1}. ${data[index].title.toString()}"),
                         ),
@@ -45,7 +45,7 @@ class FavoritePage extends StatelessWidget {
                           onPressed: () {
                             box.deleteAt(data.indexOf(data[index]));
                           },
-                          icon: Icon(Icons.delete,color: Colors.black,),
+                          icon: const Icon(Icons.delete,color: Colors.black,),
                         ),
                       ),
                     );

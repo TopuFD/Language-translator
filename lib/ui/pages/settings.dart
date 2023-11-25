@@ -37,7 +37,7 @@ class Settings extends StatelessWidget {
               Column(
                 children: [
                   ListTile(
-                      leading: Icon(
+                      leading: const Icon(
                         Icons.home,
                       ),
                       title: InkWell(
@@ -45,35 +45,35 @@ class Settings extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => HomePage()));
+                                  builder: (context) => const HomePage()));
                           
                         },
-                        child: Text("Home"),
+                        child: const Text("Home"),
                       )),
-                  ListTile(
+                  const ListTile(
                     leading: Icon(Icons.color_lens),
                     title: Text("Theme"),
                   ),
-                  ListTile(
+                  const ListTile(
                     leading: Icon(Icons.update),
                     title: Text("Updates"),
                   ),
-                  ListTile(
+                  const ListTile(
                     leading: Icon(Icons.message),
                     title: Text("Feedback"),
                   ),
-                  ListTile(
+                  const ListTile(
                     leading: Icon(
                       Icons.star,
                       color: Colors.black,
                     ),
                     title: Text("Reviews"),
                   ),
-                  ListTile(
+                  const ListTile(
                     leading: Icon(Icons.lock),
                     title: Text("Privacy Pollicy"),
                   ),
-                  ListTile(
+                  const ListTile(
                     leading: Icon(Icons.question_mark),
                     title: Text("Helps"),
                   ),

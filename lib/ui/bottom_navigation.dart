@@ -16,10 +16,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var selectIndex = 0;
   List pages = [
-    MyHomePage(),
+    const MyHomePage(),
     FavoritePage(),
     HistoryPage(),
-    Settings(),
+    const Settings(),
   ];
   @override
   Widget build(BuildContext context) {
