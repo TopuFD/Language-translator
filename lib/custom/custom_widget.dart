@@ -32,28 +32,31 @@ class ReusableMethod {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.white,
         textColor: Colors.black,
-        fontSize: 16.0);
+        fontSize: 16.0.sp);
   }
 
-  myButton(String btnName, ontap) {
+  myButton(String btnName, ontap,link) {
     return InkWell(
       onTap: ontap,
-      child: Container(
-        height: 200.h,
-        width: 160.w,
-        decoration: BoxDecoration(
-            gradient: const LinearGradient(
-                colors: [Colors.yellow, Colors.green, Colors.blue]),
-            borderRadius: BorderRadius.circular(15)),
+      child: Card(
+        elevation: 8,
         child: Center(
-          child: Text(
-            btnName,
-            style: TextStyle(
-                fontSize: 25.sp,
-                color: Colors.white,
-                fontWeight: FontWeight.bold),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 22.w,vertical: 20.h),
+            child: Column(
+              children: [
+                Image.asset(link,height: 80.h,width: 80.w,),
+                Text(
+                  btnName,
+                  style: TextStyle(
+                      fontSize: 25.sp,
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
           ),
         ),
       ),

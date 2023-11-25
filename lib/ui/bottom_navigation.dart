@@ -16,23 +16,26 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var selectIndex = 0;
   List pages = [
-    const MyHomePage(),
-    const FavoritePage(),
-    const HistoryPage(),
-    const Settings(),
+    MyHomePage(),
+    FavoritePage(),
+    HistoryPage(),
+    Settings(),
   ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: const Text("Translator App"),
-        centerTitle: true,
-        backgroundColor: Colors.amber,
-      ),
+      backgroundColor: Colors.blue,
+      // appBar: AppBar(
+      //   title: const Text("Translator App",style: TextStyle(color: Colors.white),),
+      //   centerTitle: true,
+      //   backgroundColor: Colors.blue,
+      // ),
       bottomNavigationBar: ResponsiveNavigationBar(
-        
-        borderRadius: 20.r,
+        activeIconColor: Colors.purple,
+        outerPadding: EdgeInsets.zero,
+        backgroundColor: Colors.blue,
+        activeButtonFlexFactor: 100,
+        borderRadius: 5.r,
         selectedIndex: selectIndex,
         onTabChange: (int index) {
           setState(() {
@@ -41,36 +44,27 @@ class _HomePageState extends State<HomePage> {
         },
         navigationBarButtons: const [
           NavigationBarButton(
+          
             text: 'Home',
             icon: Icons.home,
+            
+          
             backgroundColor: Colors.white,
-            backgroundGradient: LinearGradient(
-              colors: [Colors.yellow, Colors.green, Colors.blue],
-            ),
           ),
           NavigationBarButton(
             text: 'Favorite',
             icon: Icons.favorite,
             backgroundColor: Colors.white,
-            backgroundGradient: LinearGradient(
-              colors: [Colors.cyan, Colors.teal],
-            ),
           ),
           NavigationBarButton(
             text: 'History',
             icon: Icons.history,
             backgroundColor: Colors.white,
-            backgroundGradient: LinearGradient(
-              colors: [Colors.green, Colors.yellow],
-            ),
           ),
           NavigationBarButton(
             text: 'Settings',
             icon: Icons.settings,
             backgroundColor: Colors.white,
-            backgroundGradient: LinearGradient(
-              colors: [Colors.green, Colors.yellow],
-            ),
           ),
         ],
       ),

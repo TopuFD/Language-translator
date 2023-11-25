@@ -1,10 +1,11 @@
-import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:language_translator/ui/custom/custom_widget.dart';
-import 'package:speech_to_text/speech_to_text.dart';
+import 'package:hive/hive.dart';
+import 'package:language_translator/custom/custom_widget.dart';
+import 'package:language_translator/model/my_data_model.dart';
+import 'package:speech_to_text_google_dialog/speech_to_text_google_dialog.dart';
 import 'package:translator/translator.dart';
 
 class Translator extends StatefulWidget {
@@ -47,7 +48,8 @@ class _TranslatorState extends State<Translator> {
   String result = "";
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
   TextEditingController controller = TextEditingController();
-  bool isListening = false;
+  final favouriteBox = Hive.box("Favourite");
+  final historyBox = Hive.box("History");
   FlutterTts flutterTts = FlutterTts();
   var isLoaded = false;
 
@@ -62,6 +64,10 @@ class _TranslatorState extends State<Translator> {
       }).then((value) {
         setState(() {
           isLoaded = false;
+          final historyData =
+              DataModel(title: controller.text, description: result);
+          historyBox.add(historyData);
+          historyData.save();
         });
       });
     } catch (e) {
@@ -87,22 +93,14 @@ class _TranslatorState extends State<Translator> {
   }
 
   voiceToText() async {
-    if (isListening == true) {
-      var availble = await SpeechToText().initialize();
-      if (availble) {
-        SpeechToText().listen(
-          onResult: (value) {
-            setState(() {
-              controller.text = value.recognizedWords;
-            });
-          },
-        ).then((value) {
-          setState(() {
-            isListening = false;
-          });
-        });
-      }
-    }
+    await SpeechToTextGoogleDialog.getInstance().showGoogleDialog(
+        onTextReceived: (data) {
+      setState(() {
+        controller.text = data.toString();
+      });
+    }).then((value) {
+      ReusableMethod().myToast("Converted");
+    });
   }
 
   speakText() async {
@@ -117,246 +115,263 @@ class _TranslatorState extends State<Translator> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Translator"),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+          ),
+          title: const Text(
+            "Translator",
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.blue,
           centerTitle: true,
         ),
-        backgroundColor: Colors.white38,
+        backgroundColor: Color.fromARGB(211, 201, 227, 248),
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 5.h,
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 10.w),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.r)),
-                child: Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 3.h),
-                      decoration: BoxDecoration(
-                        border: Border(
-                            bottom: BorderSide(
-                                color: Colors.black54,
-                                width: 1.r,
-                                style: BorderStyle.solid)),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          DropdownButton(
-                              underline: Container(),
-                              iconEnabledColor: Colors.black,
-                              dropdownColor: Colors.white,
-                              iconSize: 40.sp,
-                              style: TextStyle(
-                                fontSize: 20.sp,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontStyle: FontStyle.italic,
-                              ),
-                              value: fromSelectedLanguage,
-                              items: languages.map((language) {
-                                return DropdownMenuItem(
-                                  value: language,
-                                  child: Text(language),
-                                  onTap: () {
-                                    if (language == languages[0]) {
-                                      from = languageCodes[0];
-                                    } else if (language == languages[1]) {
-                                      from = languageCodes[1];
-                                    } else if (language == languages[2]) {
-                                      from = languageCodes[2];
-                                    } else if (language == languages[3]) {
-                                      from = languageCodes[3];
-                                    } else if (language == languages[4]) {
-                                      from = languageCodes[4];
-                                    } else if (language == languages[5]) {
-                                      from = languageCodes[5];
-                                    } else if (language == languages[6]) {
-                                      from = languageCodes[6];
-                                    } else if (language == languages[7]) {
-                                      from = languageCodes[7];
-                                    } else if (language == languages[8]) {
-                                      from = languageCodes[8];
-                                    } else if (language == languages.last) {
-                                      from = languageCodes.last;
-                                    }
-                                    setState(() {});
-                                  },
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                fromSelectedLanguage = value!;
-                              }),
-                          Text(
-                            "To",
-                            style: TextStyle(
-                                fontSize: 25.sp,
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold),
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.r)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      DropdownButton(
+                          underline: Container(),
+                          iconEnabledColor: Colors.blue,
+                          dropdownColor: Colors.white,
+                          iconSize: 40.sp,
+                          style: TextStyle(
+                            fontSize: 20.sp,
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                            fontStyle: FontStyle.italic,
                           ),
-                          DropdownButton(
-                              underline: Container(),
-                              iconEnabledColor: Colors.black,
-                              dropdownColor: Colors.white,
-                              iconSize: 40.sp,
+                          value: fromSelectedLanguage,
+                          items: languages.map((language) {
+                            return DropdownMenuItem(
+                              value: language,
+                              child: Text(language),
+                              onTap: () {
+                                if (language == languages[0]) {
+                                  from = languageCodes[0];
+                                } else if (language == languages[1]) {
+                                  from = languageCodes[1];
+                                } else if (language == languages[2]) {
+                                  from = languageCodes[2];
+                                } else if (language == languages[3]) {
+                                  from = languageCodes[3];
+                                } else if (language == languages[4]) {
+                                  from = languageCodes[4];
+                                } else if (language == languages[5]) {
+                                  from = languageCodes[5];
+                                } else if (language == languages[6]) {
+                                  from = languageCodes[6];
+                                } else if (language == languages[7]) {
+                                  from = languageCodes[7];
+                                } else if (language == languages[8]) {
+                                  from = languageCodes[8];
+                                } else if (language == languages.last) {
+                                  from = languageCodes.last;
+                                }
+                                setState(() {});
+                              },
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            fromSelectedLanguage = value!;
+                          }),
+                      Text(
+                        "To",
+                        style: TextStyle(
+                            fontSize: 25.sp,
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      DropdownButton(
+                          underline: Container(),
+                          iconEnabledColor: Colors.blue,
+                          dropdownColor: Colors.white,
+                          iconSize: 40.sp,
+                          style: TextStyle(
+                            fontSize: 20.sp,
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                            fontStyle: FontStyle.italic,
+                          ),
+                          value: toSelectedLanguage,
+                          items: languages.map((language) {
+                            return DropdownMenuItem(
+                              value: language,
+                              child: Text(language),
+                              onTap: () {
+                                if (language == languages[0]) {
+                                  to = languageCodes[0];
+                                } else if (language == languages[1]) {
+                                  to = languageCodes[1];
+                                } else if (language == languages[2]) {
+                                  to = languageCodes[2];
+                                } else if (language == languages[3]) {
+                                  to = languageCodes[3];
+                                } else if (language == languages[4]) {
+                                  to = languageCodes[4];
+                                } else if (language == languages[5]) {
+                                  to = languageCodes[5];
+                                } else if (language == languages[6]) {
+                                  to = languageCodes[6];
+                                } else if (language == languages[7]) {
+                                  to = languageCodes[7];
+                                } else if (language == languages[8]) {
+                                  to = languageCodes[8];
+                                } else if (language == languages.last) {
+                                  to = languageCodes.last;
+                                }
+                                setState(() {});
+                              },
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            toSelectedLanguage = value!;
+                          }),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 5.h,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.w),
+                        child: Form(
+                          key: _key,
+                          child: SingleChildScrollView(
+                            child: TextFormField(
                               style: TextStyle(
-                                fontSize: 20.sp,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontStyle: FontStyle.italic,
-                              ),
-                              value: toSelectedLanguage,
-                              items: languages.map((language) {
-                                return DropdownMenuItem(
-                                  value: language,
-                                  child: Text(language),
-                                  onTap: () {
-                                    if (language == languages[0]) {
-                                      to = languageCodes[0];
-                                    } else if (language == languages[1]) {
-                                      to = languageCodes[1];
-                                    } else if (language == languages[2]) {
-                                      to = languageCodes[2];
-                                    } else if (language == languages[3]) {
-                                      to = languageCodes[3];
-                                    } else if (language == languages[4]) {
-                                      to = languageCodes[4];
-                                    } else if (language == languages[5]) {
-                                      to = languageCodes[5];
-                                    } else if (language == languages[6]) {
-                                      to = languageCodes[6];
-                                    } else if (language == languages[7]) {
-                                      to = languageCodes[7];
-                                    } else if (language == languages[8]) {
-                                      to = languageCodes[8];
-                                    } else if (language == languages.last) {
-                                      to = languageCodes.last;
-                                    }
-                                    setState(() {});
-                                  },
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                toSelectedLanguage = value!;
+                                  fontSize: 22.sp,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500),
+                              maxLines: 4,
+                              controller: controller,
+                              decoration: InputDecoration(
+                                  hintText: "Write here...",
+                                  hintStyle: TextStyle(
+                                      fontSize: 22.sp,
+                                      color: Colors.black,
+                                      fontStyle: FontStyle.italic),
+                                  border: InputBorder.none),
+                              validator: (value) {
+                                if (value!.isNotEmpty) {
+                                  return null;
+                                } else {
+                                  return null;
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          CustomIconButton(
+                              iconData: Icons.paste,
+                              onPressed: () {
+                                pasteData();
+                              }),
+                          CustomIconButton(
+                              iconData: Icons.mic,
+                              onPressed: () {
+                                voiceToText();
+                                setState(() {});
+                              }),
+                          CustomIconButton(
+                              iconData: Icons.cancel,
+                              onPressed: () {
+                                controller.clear();
+                                setState(() {
+                                  result = "";
+                                });
                               }),
                         ],
                       ),
-                    ),
-                    Container(
-                        height: 170.h,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(10.r),
-                                bottomRight: Radius.circular(10.r))),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w),
-                          child: Form(
-                            key: _key,
-                            child: SingleChildScrollView(
-                              child: TextFormField(
-                                style: TextStyle(
-                                    fontSize: 25.sp,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500),
-                                maxLines: 5,
-                                controller: controller,
-                                decoration: const InputDecoration(
-                                    border: InputBorder.none),
-                                validator: (value) {
-                                  if (value!.isNotEmpty) {
-                                    return null;
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                              ),
-                            ),
-                          ),
-                        )),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        CustomIconButton(
-                            iconData: Icons.paste,
-                            onPressed: () {
-                              pasteData();
-                            }),
-                        CustomIconButton(
-                            iconData: Icons.mic,
-                            onPressed: () {
-                              setState(() {
-                                isListening = true;
-                              });
-                              voiceToText();
-                            }),
-                        CustomIconButton(
-                            iconData: Icons.cancel,
-                            onPressed: () {
-                              controller.clear();
-                            }),
-                      ],
-                    )
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 10.h,
-              ),
-              ElevatedButton(
-                  style: ButtonStyle(
-                      padding: MaterialStateProperty.all(EdgeInsets.symmetric(
-                          horizontal: 100.w, vertical: 15.h))),
-                  onPressed: () {
+                InkWell(
+                  onTap: () {
                     setState(() {
                       isLoaded = true;
                     });
                     if (_key.currentState!.validate()) {
                       // ignore: void_checks
-                      return translate();
+                      translate();
                     } else {
                       setState(() {
                         isLoaded = false;
                       });
                     }
                   },
-                  child: isLoaded == true
-                      ? const CircularProgressIndicator(
-                          color: Colors.blue,
-                        )
-                      : Text(
-                          "Translate",
-                          style: TextStyle(
-                              fontSize: 25.sp,
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold),
-                        )),
-              Container(
-                height: 250.h,
-                width: double.infinity,
-                margin: EdgeInsets.all(10.h),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.r)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      // ignore: prefer_const_constructors
+                  child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 8.h),
+                      padding: EdgeInsets.symmetric(vertical: 10.h),
+                      width: double.maxFinite,
                       decoration: BoxDecoration(
-                        border: const Border(
-                            bottom: BorderSide(color: Colors.black)),
-                      ),
-                      child: Row(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(10.r)),
+                      child: isLoaded == true
+                          ? const Center(
+                              child: const CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                            )
+                          : Center(
+                              child: Text(
+                                "Translate",
+                                style: TextStyle(
+                                    fontSize: 25.sp,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            )),
+                ),
+                Container(
+                  height: 230.h,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.r)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             CustomIconButton(
-                                iconData: Icons.favorite, onPressed: () {}),
+                                iconData: Icons.favorite,
+                                onPressed: () {
+                                  final data = DataModel(
+                                      title: controller.text,
+                                      description: result);
+
+                                  favouriteBox.add(data);
+                                  data.save().then((value) {
+                                    return ReusableMethod()
+                                        .myToast("Add Favourite");
+                                  });
+                                }),
                             CustomIconButton(
                                 iconData: Icons.volume_up,
                                 onPressed: () {
@@ -371,30 +386,29 @@ class _TranslatorState extends State<Translator> {
                                   });
                                 }),
                           ]),
-                    ),
-                    Expanded(
-                      child: Container(
-                        padding: EdgeInsets.all(8.h),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(10.r),
-                                bottomRight: Radius.circular(10.r))),
-                        child: SingleChildScrollView(
-                          child: SelectableText(
-                            result,
-                            style: TextStyle(
-                                fontSize: 22.sp,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500),
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.all(8.h),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(10.r),
+                                  bottomRight: Radius.circular(10.r))),
+                          child: SingleChildScrollView(
+                            child: SelectableText(
+                              result,
+                              style: TextStyle(
+                                  fontSize: 22.sp,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              )
-            ],
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
