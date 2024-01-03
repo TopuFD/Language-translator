@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:language_translator/ui/bottom_navigation.dart';
+import 'package:language_translator/ui/pages/bottom_navigation.dart';
 
 class Settings extends StatelessWidget {
   const Settings({super.key});
@@ -9,6 +9,7 @@ class Settings extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: const Color.fromARGB(246, 245, 254, 245),
         body: SingleChildScrollView(
           child: Column(
             children: [

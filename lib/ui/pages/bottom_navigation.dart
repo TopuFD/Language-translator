@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:language_translator/ui/pages/favorite.dart';
 import 'package:language_translator/ui/pages/history.dart';
-import 'package:language_translator/ui/pages/home_page.dart';
 import 'package:language_translator/ui/pages/settings.dart';
+import 'package:language_translator/ui/pages/translator.dart';
 import 'package:responsive_navigation_bar/responsive_navigation_bar.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,7 +16,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var selectIndex = 0;
   List pages = [
-    const MyHomePage(),
+    const Translator(),
     FavoritePage(),
     HistoryPage(),
     const Settings(),
@@ -24,16 +24,11 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue,
-      // appBar: AppBar(
-      //   title: const Text("Translator App",style: TextStyle(color: Colors.white),),
-      //   centerTitle: true,
-      //   backgroundColor: Colors.blue,
-      // ),
+      // backgroundColor: const Color.fromARGB(255, 3, 104, 7),
       bottomNavigationBar: ResponsiveNavigationBar(
         activeIconColor: Colors.purple,
         outerPadding: EdgeInsets.zero,
-        backgroundColor: Colors.blue,
+        backgroundColor: const Color.fromARGB(255, 3, 104, 7),
         activeButtonFlexFactor: 100,
         borderRadius: 5.r,
         selectedIndex: selectIndex,

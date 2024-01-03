@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive/hive.dart';
 import 'package:language_translator/model/my_data_model.dart';
-import 'package:language_translator/ui/bottom_navigation.dart';
+import 'package:language_translator/ui/splash_screen.dart';
 import 'package:path_provider/path_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   final directory = await getApplicationDocumentsDirectory();
   Hive.init(directory.path);
   Hive.registerAdapter(DataModelAdapter());
+
   await Hive.openBox("Favourite");
   await Hive.openBox("History");
   runApp(const MyApp());
@@ -31,7 +34,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             useMaterial3: true,
           ),
-          home: const HomePage(),
+          home: const SplashScreen(),
         );
       },
     );

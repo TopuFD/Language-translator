@@ -17,7 +17,7 @@ class CustomIconButton extends StatelessWidget {
     return IconButton(
         onPressed: onPressed,
         icon: CircleAvatar(
-            backgroundColor: Colors.blue,
+            backgroundColor: const Color.fromARGB(255, 3, 104, 7),
             child: Icon(
               iconData,
               color: Colors.white,
@@ -52,7 +52,7 @@ class ReusableMethod {
                   btnName,
                   style: TextStyle(
                       fontSize: 25.sp,
-                      color: Colors.blue,
+                      color: const Color.fromARGB(255, 3, 104, 7),
                       fontWeight: FontWeight.bold),
                 ),
               ],
